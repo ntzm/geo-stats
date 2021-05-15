@@ -2,6 +2,23 @@ body {
     font-family: sans-serif;
 }
 
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #D7DBDD;
+}
+
+.tab {
+    cursor: pointer;
+    padding: 5px 30px;
+    color: #16A2D7;
+    font-size: 12px;
+    border-bottom: 2px solid transparent;
+}
+
+.tab--active {
+    border-bottom-color: #4EBBE4;
+}
+
 #country-list {
     list-style: none;
     padding: 0;
