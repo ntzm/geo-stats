@@ -1,3 +1,8 @@
+const countries = {
+    ar: 'Argentina',
+    at: 'Austria',
+}
+
 function getAll() {
     browser.storage.local.get(null)
         .then(stuff => {
@@ -48,24 +53,38 @@ function getAll() {
             wrapper.innerHTML = '';
 
             res2.forEach(r => {
-                const row = document.createElement('li');
+                const row = document.createElement('tr');
                 row.classList.add('country-row');
 
                 const flag = document.createElement('img');
                 flag.src = `img/${r.country}.gif`;
-                flag.title = r.country;
-                flag.classList.add('country-row__flag')
 
-                const percent = document.createElement('span');
-                percent.textContent = (r.percent * 100).toFixed(2) + '%';
-                percent.classList.add('country-row__percent');
+                const flagCell = document.createElement('td');
+                flagCell.appendChild(flag);
 
-                row.appendChild(flag);
-                row.appendChild(percent);
+                const country = document.createElement('td');
+                country.textContent = countries[r.country] ?? r.country;
+
+                const percentCell = document.createElement('td');
+                percentCell.textContent = prettyPercent(r.percent);
+
+                row.appendChild(flagCell);
+                row.appendChild(country);
+                row.appendChild(percentCell);
 
                 wrapper.appendChild(row);
             });
         });
+}
+
+function prettyPercent(float) {
+    const perc = (float * 100).toFixed(1);
+
+    if (perc.endsWith('.0')) {
+        return perc.substr(0, perc.length - 2) + '%';
+    }
+
+    return perc + '%';
 }
 
 getAll();
