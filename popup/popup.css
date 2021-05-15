@@ -1,0 +1,16 @@
+body {
+    font-family: sans-serif;
+}
+
+#country-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.country-row__flag {
+    margin-right: 5px;
+}
+
+.country-row__percent {
+}
