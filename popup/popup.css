@@ -39,6 +39,10 @@ body {
     width: 0;
 }
 
+.cell--rate {
+    width: 0;
+}
+
 .cell--help {
     text-align: right;
 }

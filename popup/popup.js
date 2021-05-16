@@ -285,14 +285,24 @@ function displayWorstCountries() {
                     continue;
                 }
 
-                if (countriesWithCounts[country].incorrect === 0) {
-                    countriesWithPercent.push({ country, percent: 1 });
+                const correct = countriesWithCounts[country].correct;
+                const incorrect = countriesWithCounts[country].incorrect;
+
+                if (incorrect === 0) {
+                    countriesWithPercent.push({
+                        country,
+                        correct,
+                        incorrect,
+                        percent: 1,
+                    });
                     continue;
                 }
 
                 countriesWithPercent.push({
                     country,
-                    percent: countriesWithCounts[country].correct / (countriesWithCounts[country].correct + countriesWithCounts[country].incorrect),
+                    correct,
+                    incorrect,
+                    percent: correct / (correct + incorrect),
                 });
             }
 
@@ -310,6 +320,10 @@ function displayWorstCountries() {
                 flagCell.classList.add('cell', 'cell--flag');
                 flagCell.title = countries[r.country.toUpperCase()];
 
+                const rateCell = document.createElement('td');
+                rateCell.classList.add('cell', 'cell--rate');
+                rateCell.textContent = `${r.correct}/${r.correct + r.incorrect}`;
+
                 const percentCell = document.createElement('td');
                 const percent = prettyPercent(r.percent);
                 percentCell.textContent = percent;
@@ -317,6 +331,7 @@ function displayWorstCountries() {
                 percentCell.classList.add('cell');
 
                 row.appendChild(flagCell);
+                row.appendChild(rateCell);
                 row.appendChild(percentCell);
 
                 list.appendChild(row);
