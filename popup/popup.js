@@ -329,22 +329,43 @@ function displayConfusedCountries() {
 
     browser.storage.local.get(null)
         .then(items => {
-            const incorrectGuesses = [];
+            const combined = {};
 
             for (const key in items) {
                 if (!items.hasOwnProperty(key)) {
                     continue;
                 }
 
-                const [guessedCountry, correctCountry] = key.split('-');
+                const countries = key.split('-');
 
-                if (guessedCountry !== correctCountry) {
-                    incorrectGuesses.push({
-                        guessedCountry,
-                        correctCountry,
-                        times: items[key],
-                    });
+                if (countries[0] === countries[1]) {
+                    continue;
                 }
+
+                countries.sort();
+                const combinedKey = countries.join('-');
+
+                if (combined.hasOwnProperty(combinedKey)) {
+                    combined[combinedKey] += items[key];
+                } else {
+                    combined[combinedKey] = items[key];
+                }
+            }
+
+            const incorrectGuesses = [];
+
+            for (const key in combined) {
+                if (!combined.hasOwnProperty(key)) {
+                    continue;
+                }
+
+                const [countryA, countryB] = key.split('-');
+
+                incorrectGuesses.push({
+                    countryA,
+                    countryB,
+                    times: combined[key],
+                });
             }
 
             incorrectGuesses.sort((a, b) => b.times - a.times);
@@ -353,21 +374,21 @@ function displayConfusedCountries() {
                 const row = document.createElement('tr');
                 row.classList.add('row');
 
-                const guessedFlag = document.createElement('img');
-                guessedFlag.src = `img/${r.guessedCountry}.gif`;
+                const countryAFlag = document.createElement('img');
+                countryAFlag.src = `img/${r.countryA}.gif`;
 
-                const guessedFlagCell = document.createElement('td');
-                guessedFlagCell.appendChild(guessedFlag);
-                guessedFlagCell.classList.add('cell', 'cell--flag');
-                guessedFlagCell.title = countries[r.guessedCountry.toUpperCase()];
+                const countryACell = document.createElement('td');
+                countryACell.appendChild(countryAFlag);
+                countryACell.classList.add('cell', 'cell--flag');
+                countryACell.title = countries[r.countryA.toUpperCase()];
 
-                const correctFlag = document.createElement('img');
-                correctFlag.src = `img/${r.correctCountry}.gif`;
+                const countryBFlag = document.createElement('img');
+                countryBFlag.src = `img/${r.countryB}.gif`;
 
-                const correctFlagCell = document.createElement('td');
-                correctFlagCell.appendChild(correctFlag);
-                correctFlagCell.classList.add('cell', 'cell--flag');
-                correctFlagCell.title = countries[r.correctCountry.toUpperCase()];
+                const countryBCell = document.createElement('td');
+                countryBCell.appendChild(countryBFlag);
+                countryBCell.classList.add('cell', 'cell--flag');
+                countryBCell.title = countries[r.countryB.toUpperCase()];
 
                 const timesCell = document.createElement('td');
                 timesCell.textContent = r.times;
@@ -375,14 +396,14 @@ function displayConfusedCountries() {
 
                 const helpLink = document.createElement('a');
                 helpLink.textContent = 'Help!';
-                helpLink.href = `https://geo-stats.github.io/countries/${r.guessedCountry}-${r.correctCountry}`;
+                helpLink.href = `https://geo-stats.github.io/countries/${r.countryA}-${r.countryB}`;
 
                 const helpCell = document.createElement('td');
                 helpCell.appendChild(helpLink);
                 helpCell.classList.add('cell');
 
-                row.appendChild(guessedFlagCell);
-                row.appendChild(correctFlagCell);
+                row.appendChild(countryACell);
+                row.appendChild(countryBCell);
                 row.appendChild(timesCell);
                 row.appendChild(helpCell);
 
