@@ -3,56 +3,57 @@ const countries = {
     at: 'Austria',
 }
 
-function getAll() {
+function displayBestCountries() {
     browser.storage.local.get(null)
-        .then(stuff => {
-            const res = {};
+        .then(items => {
+            const countriesWithCounts = {};
 
-            for (const prop in stuff) {
-                if (!stuff.hasOwnProperty(prop)) {
+            for (const key in items) {
+                if (!items.hasOwnProperty(key)) {
                     continue;
                 }
 
-                const [guess, correct] = prop.split('-');
+                const [guessedCountry, correctCountry] = key.split('-');
+                const isCorrect = guessedCountry === correctCountry;
 
-                if (res.hasOwnProperty(correct)) {
-                    if (guess === correct) {
-                        res[correct].correct++;
+                if (countriesWithCounts.hasOwnProperty(correctCountry)) {
+                    if (isCorrect) {
+                        countriesWithCounts[correctCountry].correct++;
                     } else {
-                        res[correct].incorrect++;
+                        countriesWithCounts[correctCountry].incorrect++;
                     }
                 } else {
-                    res[correct] = {
-                        correct: guess === correct ? 1 : 0,
-                        incorrect: guess === correct ? 0 : 1,
+                    countriesWithCounts[correctCountry] = {
+                        correct: isCorrect ? 1 : 0,
+                        incorrect: isCorrect ? 0 : 1,
                     };
                 }
             }
 
-            const res2 = [];
+            const countriesWithPercent = [];
 
-            for (const country in res) {
-                if (!res.hasOwnProperty(country)) {
+            for (const country in countriesWithCounts) {
+                if (!countriesWithCounts.hasOwnProperty(country)) {
                     continue;
                 }
 
-                if (res[country].incorrect === 0) {
-                    res2.push({country, percent: 1});
+                if (countriesWithCounts[country].incorrect === 0) {
+                    countriesWithPercent.push({ country, percent: 1 });
                     continue;
                 }
 
-                res2.push({
+                countriesWithPercent.push({
                     country,
-                    percent: res[country].correct / (res[country].correct + res[country].incorrect),
+                    percent: countriesWithCounts[country].correct / (countriesWithCounts[country].correct + countriesWithCounts[country].incorrect),
                 });
             }
 
-            res2.sort((a, b) => -(a.percent - b.percent));
+            countriesWithPercent.sort((a, b) => -(a.percent - b.percent));
 
-            const wrapper = document.getElementById('country-list');
-            wrapper.innerHTML = '';
+            const list = document.getElementById('country-list');
+            list.innerHTML = '';
 
-            res2.forEach(r => {
+            countriesWithPercent.forEach(r => {
                 const row = document.createElement('tr');
                 row.classList.add('country-row');
 
@@ -72,19 +73,19 @@ function getAll() {
                 row.appendChild(country);
                 row.appendChild(percentCell);
 
-                wrapper.appendChild(row);
+                list.appendChild(row);
             });
         });
 }
 
 function prettyPercent(float) {
-    const perc = (float * 100).toFixed(1);
+    const percentage = (float * 100).toFixed(1);
 
-    if (perc.endsWith('.0')) {
-        return perc.substr(0, perc.length - 2) + '%';
+    if (percentage.endsWith('.0')) {
+        return percentage.substr(0, percentage.length - 2) + '%';
     }
 
-    return perc + '%';
+    return percentage + '%';
 }
 
-getAll();
+displayBestCountries();
