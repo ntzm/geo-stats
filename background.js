@@ -14,6 +14,10 @@ browser.webRequest.onBeforeRequest.addListener(
         const requestBody = JSON.parse(decoder.decode(details.requestBody.raw[0].bytes));
         const guessedCountry = requestBody.streakLocationCode;
 
+        if (typeof guessedCountry === 'undefined') {
+            return {};
+        }
+
         let filter = browser.webRequest.filterResponseData(details.requestId);
         let data = [];
 
