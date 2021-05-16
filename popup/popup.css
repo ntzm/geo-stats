@@ -37,3 +37,7 @@ body {
 .cell--flag {
     width: 0;
 }
+
+.cell--help {
+    text-align: right;
+}

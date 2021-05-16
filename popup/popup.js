@@ -400,7 +400,7 @@ function displayConfusedCountries() {
 
                 const helpCell = document.createElement('td');
                 helpCell.appendChild(helpLink);
-                helpCell.classList.add('cell');
+                helpCell.classList.add('cell', 'cell--help');
 
                 row.appendChild(countryACell);
                 row.appendChild(countryBCell);
