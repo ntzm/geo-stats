@@ -1,4 +1,8 @@
+const list = document.getElementById('country-list');
+
 function displayWorstCountries() {
+    list.innerHTML = '';
+
     browser.storage.local.get(null)
         .then(items => {
             const countriesWithCounts = {};
@@ -45,9 +49,6 @@ function displayWorstCountries() {
 
             countriesWithPercent.sort((a, b) => a.percent - b.percent);
 
-            const list = document.getElementById('country-list');
-            list.innerHTML = '';
-
             countriesWithPercent.forEach(r => {
                 const row = document.createElement('tr');
                 row.classList.add('row');
@@ -75,6 +76,8 @@ function displayWorstCountries() {
 }
 
 function displayConfusedCountries() {
+    list.innerHTML = '';
+
     browser.storage.local.get(null)
         .then(items => {
             const incorrectGuesses = [];
@@ -96,9 +99,6 @@ function displayConfusedCountries() {
             }
 
             incorrectGuesses.sort((a, b) => b.times - a.times);
-
-            const list = document.getElementById('country-list');
-            list.innerHTML = '';
 
             incorrectGuesses.forEach(r => {
                 const row = document.createElement('tr');
