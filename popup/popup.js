@@ -331,26 +331,17 @@ function displayConfusedCountries() {
         .then(items => {
             const combined = {};
 
-            for (const key in items) {
-                if (!items.hasOwnProperty(key)) {
-                    continue;
-                }
-
-                const countries = key.split('-');
-
-                if (countries[0] === countries[1]) {
-                    continue;
-                }
-
-                countries.sort();
-                const combinedKey = countries.join('-');
-
-                if (combined.hasOwnProperty(combinedKey)) {
-                    combined[combinedKey] += items[key];
-                } else {
-                    combined[combinedKey] = items[key];
-                }
-            }
+            Object.keys(items)
+                .map(key => ({ countries: key.split('-'), times: items[key] }))
+                .filter(r => r.countries[0] !== r.countries[1])
+                .map(r => ({ combinedKey: [...r.countries].sort().join('-'), times: r.times }))
+                .forEach(r => {
+                    if (combined.hasOwnProperty(r.combinedKey)) {
+                        combined[r.combinedKey] += r.times;
+                    } else {
+                        combined[r.combinedKey] = r.times;
+                    }
+                });
 
             Object.keys(combined)
                 .map(key => ({ countries: key.split('-'), times: combined[key] }))
