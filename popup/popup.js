@@ -396,7 +396,7 @@ function displayConfusedCountries() {
 
                 const helpLink = document.createElement('a');
                 helpLink.textContent = 'Help!';
-                helpLink.href = `https://geo-stats.github.io/countries/${r.countryA}-${r.countryB}`;
+                helpLink.href = `https://ntzm.github.io/geo-stats/countries/${r.countryA}-${r.countryB}`;
 
                 const helpCell = document.createElement('td');
                 helpCell.appendChild(helpLink);
