@@ -373,9 +373,18 @@ function displayConfusedCountries() {
                 timesCell.textContent = r.times;
                 timesCell.classList.add('cell');
 
+                const helpLink = document.createElement('a');
+                helpLink.textContent = 'Help!';
+                helpLink.href = `https://geo-stats.github.io/countries/${r.guessedCountry}-${r.correctCountry}`;
+
+                const helpCell = document.createElement('td');
+                helpCell.appendChild(helpLink);
+                helpCell.classList.add('cell');
+
                 row.appendChild(guessedFlagCell);
                 row.appendChild(correctFlagCell);
                 row.appendChild(timesCell);
+                row.appendChild(helpCell);
 
                 list.appendChild(row);
             });
