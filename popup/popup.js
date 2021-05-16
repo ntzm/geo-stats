@@ -359,7 +359,8 @@ function displayConfusedCountries() {
                     timesCell.classList.add('cell');
 
                     const helpLink = document.createElement('a');
-                    helpLink.textContent = 'Help!';
+                    helpLink.classList.add('link');
+                    helpLink.textContent = 'Differences';
                     helpLink.href = `https://ntzm.github.io/geo-stats/countries/${r.countries.join('-')}`;
 
                     const helpCell = document.createElement('td');
