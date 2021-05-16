@@ -1,7 +1,7 @@
 const countries = {
     ar: 'Argentina',
     at: 'Austria',
-}
+};
 
 function displayBestCountries() {
     browser.storage.local.get(null)
@@ -89,3 +89,21 @@ function prettyPercent(float) {
 }
 
 displayBestCountries();
+
+function makeTabActive(tab) {
+    const active = document.querySelector('.tab--active');
+    active.classList.remove('tab--active');
+
+    tab.classList.add('tab--active');
+}
+
+document.getElementById('tab-best-countries').addEventListener('click', (e) => {
+    makeTabActive(e.target);
+    displayBestCountries();
+});
+
+document.getElementById('tab-worst-mistakes').addEventListener('click', (e) => {
+    makeTabActive(e.target);
+    const list = document.getElementById('country-list');
+    list.innerHTML = '';
+});
