@@ -13,14 +13,16 @@ Thailand drives on the left, whereas Cambodia drives on the right.
 ### Thailand
 
 ![](th-bollard.png)
-Copyright Google
+
+_Copyright Google_
 
 Thai bollards are black and white.
 
 ### Cambodia
 
 ![](kh-bollard.png)
-Copyright Google
+
+_Copyright Google_
 
 Cambodian bollards are red and white.
 
