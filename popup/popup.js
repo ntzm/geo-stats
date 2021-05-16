@@ -329,19 +329,11 @@ function displayConfusedCountries() {
 
     browser.storage.local.get(null)
         .then(items => {
-            const combined = {};
-
-            Object.keys(items)
+            const combined = Object.keys(items)
                 .map(key => ({ countries: key.split('-'), times: items[key] }))
                 .filter(r => r.countries[0] !== r.countries[1])
                 .map(r => ({ combinedKey: [...r.countries].sort().join('-'), times: r.times }))
-                .forEach(r => {
-                    if (combined.hasOwnProperty(r.combinedKey)) {
-                        combined[r.combinedKey] += r.times;
-                    } else {
-                        combined[r.combinedKey] = r.times;
-                    }
-                });
+                .reduce((carry, r) => ({ ...carry, [r.combinedKey]: (carry[r.combinedKey] ?? 0) + r.times }), {});
 
             Object.keys(combined)
                 .map(key => ({ countries: key.split('-'), times: combined[key] }))
