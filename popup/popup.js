@@ -352,63 +352,42 @@ function displayConfusedCountries() {
                 }
             }
 
-            const incorrectGuesses = [];
+            Object.keys(combined)
+                .map(key => ({ countries: key.split('-'), times: combined[key] }))
+                .sort((a, b) => b.times - a.times)
+                .forEach(r => {
+                    const row = document.createElement('tr');
+                    row.classList.add('row');
 
-            for (const key in combined) {
-                if (!combined.hasOwnProperty(key)) {
-                    continue;
-                }
+                    r.countries.forEach(country => {
+                        const flag = document.createElement('img');
+                        flag.src = `img/${country}.gif`;
 
-                const [countryA, countryB] = key.split('-');
+                        const cell = document.createElement('td');
+                        cell.appendChild(flag);
+                        cell.classList.add('cell', 'cell--flag');
+                        cell.title = countries[country.toUpperCase()];
 
-                incorrectGuesses.push({
-                    countryA,
-                    countryB,
-                    times: combined[key],
+                        row.appendChild(cell);
+                    });
+
+                    const timesCell = document.createElement('td');
+                    timesCell.textContent = r.times;
+                    timesCell.classList.add('cell');
+
+                    const helpLink = document.createElement('a');
+                    helpLink.textContent = 'Help!';
+                    helpLink.href = `https://ntzm.github.io/geo-stats/countries/${r.countries.join('-')}`;
+
+                    const helpCell = document.createElement('td');
+                    helpCell.appendChild(helpLink);
+                    helpCell.classList.add('cell', 'cell--help');
+
+                    row.appendChild(timesCell);
+                    row.appendChild(helpCell);
+
+                    list.appendChild(row);
                 });
-            }
-
-            incorrectGuesses.sort((a, b) => b.times - a.times);
-
-            incorrectGuesses.forEach(r => {
-                const row = document.createElement('tr');
-                row.classList.add('row');
-
-                const countryAFlag = document.createElement('img');
-                countryAFlag.src = `img/${r.countryA}.gif`;
-
-                const countryACell = document.createElement('td');
-                countryACell.appendChild(countryAFlag);
-                countryACell.classList.add('cell', 'cell--flag');
-                countryACell.title = countries[r.countryA.toUpperCase()];
-
-                const countryBFlag = document.createElement('img');
-                countryBFlag.src = `img/${r.countryB}.gif`;
-
-                const countryBCell = document.createElement('td');
-                countryBCell.appendChild(countryBFlag);
-                countryBCell.classList.add('cell', 'cell--flag');
-                countryBCell.title = countries[r.countryB.toUpperCase()];
-
-                const timesCell = document.createElement('td');
-                timesCell.textContent = r.times;
-                timesCell.classList.add('cell');
-
-                const helpLink = document.createElement('a');
-                helpLink.textContent = 'Help!';
-                helpLink.href = `https://ntzm.github.io/geo-stats/countries/${r.countryA}-${r.countryB}`;
-
-                const helpCell = document.createElement('td');
-                helpCell.appendChild(helpLink);
-                helpCell.classList.add('cell', 'cell--help');
-
-                row.appendChild(countryACell);
-                row.appendChild(countryBCell);
-                row.appendChild(timesCell);
-                row.appendChild(helpCell);
-
-                list.appendChild(row);
-            });
         });
 }
 
