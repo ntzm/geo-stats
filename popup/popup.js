@@ -263,79 +263,64 @@ function displayWorstCountries() {
 
                 const [guessedCountry, correctCountry] = key.split('-');
                 const isCorrect = guessedCountry === correctCountry;
+                const times = items[key];
 
                 if (countriesWithCounts.hasOwnProperty(correctCountry)) {
                     if (isCorrect) {
-                        countriesWithCounts[correctCountry].correct++;
+                        countriesWithCounts[correctCountry].correct += times;
                     } else {
-                        countriesWithCounts[correctCountry].incorrect++;
+                        countriesWithCounts[correctCountry].incorrect += times;
                     }
                 } else {
                     countriesWithCounts[correctCountry] = {
-                        correct: isCorrect ? 1 : 0,
-                        incorrect: isCorrect ? 0 : 1,
+                        correct: isCorrect ? times : 0,
+                        incorrect: isCorrect ? 0 : times,
                     };
                 }
             }
 
-            const countriesWithPercent = [];
-
-            for (const country in countriesWithCounts) {
-                if (!countriesWithCounts.hasOwnProperty(country)) {
-                    continue;
-                }
-
-                const correct = countriesWithCounts[country].correct;
-                const incorrect = countriesWithCounts[country].incorrect;
-
-                if (incorrect === 0) {
-                    countriesWithPercent.push({
+            Object.keys(countriesWithCounts)
+                .map(country => {
+                    const correct = countriesWithCounts[country].correct;
+                    const incorrect = countriesWithCounts[country].incorrect;
+                    return {
                         country,
                         correct,
                         incorrect,
-                        percent: 1,
-                    });
-                    continue;
-                }
+                        percent: incorrect === 0
+                            ? 1
+                            : correct / (correct + incorrect),
+                    }
+                })
+                .sort((a, b) => a.percent - b.percent)
+                .forEach(r => {
+                    const row = document.createElement('tr');
+                    row.classList.add('row');
 
-                countriesWithPercent.push({
-                    country,
-                    correct,
-                    incorrect,
-                    percent: correct / (correct + incorrect),
+                    const flag = document.createElement('img');
+                    flag.src = `img/${r.country}.gif`;
+
+                    const flagCell = document.createElement('td');
+                    flagCell.appendChild(flag);
+                    flagCell.classList.add('cell', 'cell--flag');
+                    flagCell.title = countries[r.country.toUpperCase()];
+
+                    const rateCell = document.createElement('td');
+                    rateCell.classList.add('cell', 'cell--rate');
+                    rateCell.textContent = `${r.correct}/${r.correct + r.incorrect}`;
+
+                    const percentCell = document.createElement('td');
+                    const percent = prettyPercent(r.percent);
+                    percentCell.textContent = percent;
+                    percentCell.style.background = `linear-gradient(to right, #ffd9d9 ${percent}, transparent ${percent})`;
+                    percentCell.classList.add('cell');
+
+                    row.appendChild(flagCell);
+                    row.appendChild(rateCell);
+                    row.appendChild(percentCell);
+
+                    list.appendChild(row);
                 });
-            }
-
-            countriesWithPercent.sort((a, b) => a.percent - b.percent);
-
-            countriesWithPercent.forEach(r => {
-                const row = document.createElement('tr');
-                row.classList.add('row');
-
-                const flag = document.createElement('img');
-                flag.src = `img/${r.country}.gif`;
-
-                const flagCell = document.createElement('td');
-                flagCell.appendChild(flag);
-                flagCell.classList.add('cell', 'cell--flag');
-                flagCell.title = countries[r.country.toUpperCase()];
-
-                const rateCell = document.createElement('td');
-                rateCell.classList.add('cell', 'cell--rate');
-                rateCell.textContent = `${r.correct}/${r.correct + r.incorrect}`;
-
-                const percentCell = document.createElement('td');
-                const percent = prettyPercent(r.percent);
-                percentCell.textContent = percent;
-                percentCell.style.background = `linear-gradient(to right, #ffd9d9 ${percent}, transparent ${percent})`;
-                percentCell.classList.add('cell');
-
-                row.appendChild(flagCell);
-                row.appendChild(rateCell);
-                row.appendChild(percentCell);
-
-                list.appendChild(row);
-            });
         });
 }
 
