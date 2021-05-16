@@ -50,7 +50,7 @@ function displayWorstCountries() {
 
             countriesWithPercent.forEach(r => {
                 const row = document.createElement('tr');
-                row.classList.add('country-row');
+                row.classList.add('row');
 
                 const flag = document.createElement('img');
                 flag.src = `img/${r.country}.gif`;
@@ -58,9 +58,13 @@ function displayWorstCountries() {
 
                 const flagCell = document.createElement('td');
                 flagCell.appendChild(flag);
+                flagCell.classList.add('cell', 'cell--flag');
 
                 const percentCell = document.createElement('td');
-                percentCell.textContent = prettyPercent(r.percent);
+                const percent = prettyPercent(r.percent);
+                percentCell.textContent = percent;
+                percentCell.style.background = `linear-gradient(to right, #ffd9d9 ${percent}, transparent ${percent})`;
+                percentCell.classList.add('cell');
 
                 row.appendChild(flagCell);
                 row.appendChild(percentCell);
@@ -98,7 +102,7 @@ function displayConfusedCountries() {
 
             incorrectGuesses.forEach(r => {
                 const row = document.createElement('tr');
-                row.classList.add('country-row');
+                row.classList.add('row');
 
                 const guessedFlag = document.createElement('img');
                 guessedFlag.src = `img/${r.guessedCountry}.gif`;
@@ -106,6 +110,7 @@ function displayConfusedCountries() {
 
                 const guessedFlagCell = document.createElement('td');
                 guessedFlagCell.appendChild(guessedFlag);
+                guessedFlagCell.classList.add('cell', 'cell--flag');
 
                 const correctFlag = document.createElement('img');
                 correctFlag.src = `img/${r.correctCountry}.gif`;
@@ -113,9 +118,11 @@ function displayConfusedCountries() {
 
                 const correctFlagCell = document.createElement('td');
                 correctFlagCell.appendChild(correctFlag);
+                correctFlagCell.classList.add('cell', 'cell--flag');
 
                 const timesCell = document.createElement('td');
                 timesCell.textContent = r.times;
+                timesCell.classList.add('cell');
 
                 row.appendChild(guessedFlagCell);
                 row.appendChild(correctFlagCell);
