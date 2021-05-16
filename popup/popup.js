@@ -1,8 +1,3 @@
-const countries = {
-    ar: 'Argentina',
-    at: 'Austria',
-};
-
 function displayBestCountries() {
     browser.storage.local.get(null)
         .then(items => {
@@ -59,19 +54,72 @@ function displayBestCountries() {
 
                 const flag = document.createElement('img');
                 flag.src = `img/${r.country}.gif`;
+                flag.title = r.country;
 
                 const flagCell = document.createElement('td');
                 flagCell.appendChild(flag);
-
-                const country = document.createElement('td');
-                country.textContent = countries[r.country] ?? r.country;
 
                 const percentCell = document.createElement('td');
                 percentCell.textContent = prettyPercent(r.percent);
 
                 row.appendChild(flagCell);
-                row.appendChild(country);
                 row.appendChild(percentCell);
+
+                list.appendChild(row);
+            });
+        });
+}
+
+function displayConfusedCountries() {
+    browser.storage.local.get(null)
+        .then(items => {
+            const incorrectGuesses = [];
+
+            for (const key in items) {
+                if (!items.hasOwnProperty(key)) {
+                    continue;
+                }
+
+                const [guessedCountry, correctCountry] = key.split('-');
+
+                if (guessedCountry !== correctCountry) {
+                    incorrectGuesses.push({
+                        guessedCountry,
+                        correctCountry,
+                        times: items[key],
+                    });
+                }
+            }
+
+            incorrectGuesses.sort((a, b) => b.times - a.times);
+
+            const list = document.getElementById('country-list');
+            list.innerHTML = '';
+
+            incorrectGuesses.forEach(r => {
+                const row = document.createElement('tr');
+                row.classList.add('country-row');
+
+                const guessedFlag = document.createElement('img');
+                guessedFlag.src = `img/${r.guessedCountry}.gif`;
+                guessedFlag.title = r.guessedCountry;
+
+                const guessedFlagCell = document.createElement('td');
+                guessedFlagCell.appendChild(guessedFlag);
+
+                const correctFlag = document.createElement('img');
+                correctFlag.src = `img/${r.correctCountry}.gif`;
+                correctFlag.title = r.correctCountry;
+
+                const correctFlagCell = document.createElement('td');
+                correctFlagCell.appendChild(correctFlag);
+
+                const timesCell = document.createElement('td');
+                timesCell.textContent = r.times;
+
+                row.appendChild(guessedFlagCell);
+                row.appendChild(correctFlagCell);
+                row.appendChild(timesCell);
 
                 list.appendChild(row);
             });
@@ -102,8 +150,7 @@ document.getElementById('tab-best-countries').addEventListener('click', (e) => {
     displayBestCountries();
 });
 
-document.getElementById('tab-worst-mistakes').addEventListener('click', (e) => {
+document.getElementById('tab-confused-countries').addEventListener('click', (e) => {
     makeTabActive(e.target);
-    const list = document.getElementById('country-list');
-    list.innerHTML = '';
+    displayConfusedCountries();
 });
