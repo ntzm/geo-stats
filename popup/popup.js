@@ -1,4 +1,4 @@
-const countries = {
+const countryShortToLongMap = {
     "AF": "Afghanistan",
     "AX": "Aland Islands",
     "AL": "Albania",
@@ -249,129 +249,127 @@ const countries = {
 
 const list = document.getElementById('country-list');
 
-function displayWorstCountries() {
+async function displayWorstCountries() {
     list.innerHTML = '';
 
-    browser.storage.local.get(null)
-        .then(items => {
-            const countriesWithCounts = {};
+    const items = await browser.storage.local.get(null);
 
-            for (const key in items) {
-                if (!items.hasOwnProperty(key)) {
-                    continue;
-                }
+    const countriesWithCounts = {};
 
-                const [guessedCountry, correctCountry] = key.split('-');
-                const isCorrect = guessedCountry === correctCountry;
-                const times = items[key];
+    for (const key in items) {
+        if (!items.hasOwnProperty(key)) {
+            continue;
+        }
 
-                if (countriesWithCounts.hasOwnProperty(correctCountry)) {
-                    if (isCorrect) {
-                        countriesWithCounts[correctCountry].correct += times;
-                    } else {
-                        countriesWithCounts[correctCountry].incorrect += times;
-                    }
-                } else {
-                    countriesWithCounts[correctCountry] = {
-                        correct: isCorrect ? times : 0,
-                        incorrect: isCorrect ? 0 : times,
-                    };
-                }
+        const [guessedCountry, correctCountry] = key.split('-');
+        const isCorrect = guessedCountry === correctCountry;
+        const times = items[key];
+
+        if (countriesWithCounts.hasOwnProperty(correctCountry)) {
+            if (isCorrect) {
+                countriesWithCounts[correctCountry].correct += times;
+            } else {
+                countriesWithCounts[correctCountry].incorrect += times;
             }
+        } else {
+            countriesWithCounts[correctCountry] = {
+                correct: isCorrect ? times : 0,
+                incorrect: isCorrect ? 0 : times,
+            };
+        }
+    }
 
-            Object.keys(countriesWithCounts)
-                .map(country => {
-                    const correct = countriesWithCounts[country].correct;
-                    const incorrect = countriesWithCounts[country].incorrect;
-                    return {
-                        country,
-                        correct,
-                        incorrect,
-                        percent: incorrect === 0
-                            ? 1
-                            : correct / (correct + incorrect),
-                    }
-                })
-                .sort((a, b) => a.percent - b.percent)
-                .forEach(r => {
-                    const row = document.createElement('tr');
-                    row.classList.add('row');
+    Object.keys(countriesWithCounts)
+        .map(country => {
+            const correct = countriesWithCounts[country].correct;
+            const incorrect = countriesWithCounts[country].incorrect;
+            return {
+                country,
+                correct,
+                incorrect,
+                percent: incorrect === 0
+                    ? 1
+                    : correct / (correct + incorrect),
+            }
+        })
+        .sort((a, b) => a.percent - b.percent)
+        .forEach(({ country, correct, incorrect, percent }) => {
+            const row = document.createElement('tr');
+            row.classList.add('row');
 
-                    const flag = document.createElement('img');
-                    flag.src = `img/${r.country}.gif`;
+            const flag = document.createElement('img');
+            flag.src = `img/${country}.gif`;
 
-                    const flagCell = document.createElement('td');
-                    flagCell.appendChild(flag);
-                    flagCell.classList.add('cell', 'cell--flag');
-                    flagCell.title = countries[r.country.toUpperCase()];
+            const flagCell = document.createElement('td');
+            flagCell.appendChild(flag);
+            flagCell.classList.add('cell', 'cell--flag');
+            flagCell.title = countryShortToLongMap[country.toUpperCase()];
 
-                    const rateCell = document.createElement('td');
-                    rateCell.classList.add('cell', 'cell--rate');
-                    rateCell.textContent = `${r.correct}/${r.correct + r.incorrect}`;
+            const rateCell = document.createElement('td');
+            rateCell.classList.add('cell', 'cell--rate');
+            rateCell.textContent = `${correct}/${correct + incorrect}`;
 
-                    const percentCell = document.createElement('td');
-                    const percent = prettyPercent(r.percent);
-                    percentCell.textContent = percent;
-                    percentCell.style.background = `linear-gradient(to right, #ffd9d9 ${percent}, transparent ${percent})`;
-                    percentCell.classList.add('cell');
+            const percentCell = document.createElement('td');
+            const pretty = prettyPercent(percent);
+            percentCell.textContent = pretty;
+            percentCell.style.background = `linear-gradient(to right, #ffd9d9 ${pretty}, transparent ${pretty})`;
+            percentCell.classList.add('cell');
 
-                    row.appendChild(flagCell);
-                    row.appendChild(rateCell);
-                    row.appendChild(percentCell);
+            row.appendChild(flagCell);
+            row.appendChild(rateCell);
+            row.appendChild(percentCell);
 
-                    list.appendChild(row);
-                });
+            list.appendChild(row);
         });
 }
 
-function displayConfusedCountries() {
+async function displayConfusedCountries() {
     list.innerHTML = '';
 
-    browser.storage.local.get(null)
-        .then(items => {
-            const combined = Object.keys(items)
-                .map(key => ({ countries: key.split('-'), times: items[key] }))
-                .filter(r => r.countries[0] !== r.countries[1])
-                .map(r => ({ combinedKey: [...r.countries].sort().join('-'), times: r.times }))
-                .reduce((carry, r) => ({ ...carry, [r.combinedKey]: (carry[r.combinedKey] ?? 0) + r.times }), {});
+    const items = await browser.storage.local.get(null);
 
-            Object.keys(combined)
-                .map(key => ({ countries: key.split('-'), times: combined[key] }))
-                .sort((a, b) => b.times - a.times)
-                .forEach(r => {
-                    const row = document.createElement('tr');
-                    row.classList.add('row');
+    const combined = Object.keys(items)
+        .map(key => ({ countries: key.split('-'), times: items[key] }))
+        .filter(({ countries }) => countries[0] !== countries[1])
+        .map(({ countries, times }) => ({ combinedKey: countries.sort().join('-'), times }))
+        .reduce((carry, { combinedKey, times }) => ({ ...carry, [combinedKey]: (carry[combinedKey] ?? 0) + times }), {});
 
-                    r.countries.forEach(country => {
-                        const flag = document.createElement('img');
-                        flag.src = `img/${country}.gif`;
+    Object.keys(combined)
+        .map(key => ({ countries: key.split('-'), times: combined[key] }))
+        .sort((a, b) => b.times - a.times)
+        .forEach(({ countries, times }) => {
+            const row = document.createElement('tr');
+            row.classList.add('row');
 
-                        const cell = document.createElement('td');
-                        cell.appendChild(flag);
-                        cell.classList.add('cell', 'cell--flag');
-                        cell.title = countries[country.toUpperCase()];
+            countries.forEach(country => {
+                const flag = document.createElement('img');
+                flag.src = `img/${country}.gif`;
 
-                        row.appendChild(cell);
-                    });
+                const cell = document.createElement('td');
+                cell.appendChild(flag);
+                cell.classList.add('cell', 'cell--flag');
+                cell.title = countryShortToLongMap[country.toUpperCase()];
 
-                    const timesCell = document.createElement('td');
-                    timesCell.textContent = r.times;
-                    timesCell.classList.add('cell');
+                row.appendChild(cell);
+            });
 
-                    const helpLink = document.createElement('a');
-                    helpLink.classList.add('link');
-                    helpLink.textContent = 'Differences';
-                    helpLink.href = `https://ntzm.github.io/geo-stats/countries/${r.countries.join('-')}`;
+            const timesCell = document.createElement('td');
+            timesCell.textContent = times;
+            timesCell.classList.add('cell');
 
-                    const helpCell = document.createElement('td');
-                    helpCell.appendChild(helpLink);
-                    helpCell.classList.add('cell', 'cell--help');
+            const helpLink = document.createElement('a');
+            helpLink.classList.add('link');
+            helpLink.textContent = 'Differences';
+            helpLink.href = `https://ntzm.github.io/geo-stats/countries/${countries.join('-')}`;
 
-                    row.appendChild(timesCell);
-                    row.appendChild(helpCell);
+            const helpCell = document.createElement('td');
+            helpCell.appendChild(helpLink);
+            helpCell.classList.add('cell', 'cell--help');
 
-                    list.appendChild(row);
-                });
+            row.appendChild(timesCell);
+            row.appendChild(helpCell);
+
+            list.appendChild(row);
         });
 }
 
@@ -394,12 +392,12 @@ function makeTabActive(tab) {
     tab.classList.add('tab--active');
 }
 
-document.getElementById('tab-worst-countries').addEventListener('click', (e) => {
-    makeTabActive(e.target);
+document.getElementById('tab-worst-countries').addEventListener('click', async ({ target }) => {
+    makeTabActive(target);
     displayWorstCountries();
 });
 
-document.getElementById('tab-confused-countries').addEventListener('click', (e) => {
-    makeTabActive(e.target);
+document.getElementById('tab-confused-countries').addEventListener('click', async ({ target }) => {
+    makeTabActive(target);
     displayConfusedCountries();
 });
