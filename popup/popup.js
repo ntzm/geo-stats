@@ -1,4 +1,4 @@
-function displayBestCountries() {
+function displayWorstCountries() {
     browser.storage.local.get(null)
         .then(items => {
             const countriesWithCounts = {};
@@ -43,7 +43,7 @@ function displayBestCountries() {
                 });
             }
 
-            countriesWithPercent.sort((a, b) => -(a.percent - b.percent));
+            countriesWithPercent.sort((a, b) => a.percent - b.percent);
 
             const list = document.getElementById('country-list');
             list.innerHTML = '';
@@ -136,7 +136,7 @@ function prettyPercent(float) {
     return percentage + '%';
 }
 
-displayBestCountries();
+displayWorstCountries();
 
 function makeTabActive(tab) {
     const active = document.querySelector('.tab--active');
@@ -145,9 +145,9 @@ function makeTabActive(tab) {
     tab.classList.add('tab--active');
 }
 
-document.getElementById('tab-best-countries').addEventListener('click', (e) => {
+document.getElementById('tab-worst-countries').addEventListener('click', (e) => {
     makeTabActive(e.target);
-    displayBestCountries();
+    displayWorstCountries();
 });
 
 document.getElementById('tab-confused-countries').addEventListener('click', (e) => {
