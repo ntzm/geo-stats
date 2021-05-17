@@ -248,11 +248,18 @@ const countryShortToLongMap = {
 };
 
 const list = document.getElementById('country-list');
+const message = document.getElementById('message');
 
 async function displayWorstCountries() {
     list.innerHTML = '';
+    message.textContent = '';
 
     const items = await browser.storage.local.get(null);
+
+    if (Object.keys(items).length === 0) {
+        message.textContent = 'No guesses recorded yet, play some country streaks!';
+        return;
+    }
 
     const countriesWithCounts = {};
 
@@ -324,9 +331,14 @@ async function displayWorstCountries() {
 }
 
 async function displayConfusedCountries() {
-    list.innerHTML = '';
+    message.textContent = '';
 
     const items = await browser.storage.local.get(null);
+
+    if (Object.keys(items).length === 0) {
+        message.textContent = 'No guesses recorded yet, play some country streaks!';
+        return;
+    }
 
     const combined = Object.keys(items)
         .map(key => ({ countries: key.split('-'), times: items[key] }))
