@@ -331,6 +331,7 @@ async function displayWorstCountries() {
 }
 
 async function displayConfusedCountries() {
+    list.innerHTML = '';
     message.textContent = '';
 
     const items = await browser.storage.local.get(null);
