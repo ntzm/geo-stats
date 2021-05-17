@@ -9,9 +9,21 @@ permalink: /countries/gb-ie
 
 ## Licence plates
 
+### United Kingdom
+
 In the UK, cars have white licence plates on the front of the car and yellow licence plates at the rear of the car.
 
+![](gb-licence-plates.png)
+
+_Copyright Google_
+
+### Ireland
+
 In Ireland, both the front and rear licence plates are white.
+
+![](ie-licence-plates.png)
+
+_Copyright Google_
 
 ## Road lines
 
@@ -23,6 +35,16 @@ _Copyright Google_
 
 ## Signs
 
+### United Kingdom
+
+Signs in the UK will always contain English, but may also contain Welsh if you're in Wales.
+
+![](gb-wales-sign.png)
+
+_Copyright Google_
+
+### Ireland
+
 Signs in Ireland will contain English and Gaelic in italics.
 
 ![](ie-sign.png)
@@ -31,13 +53,21 @@ _Copyright Google_
 
 ## System of measurement
 
-Ireland uses metric (km, km/h, m).
+### United Kingdom
 
 United Kingdom uses imperial (miles, mph, feet, yards).
+
+### Ireland
+
+Ireland uses metric (km, km/h, m).
+
+![](ie-speed.png)
 
 ## House style
 
 Houses in rural Ireland are boxy, and often surrounded by a stone wall.
+
+![](ie-house.png)
 
 ---
 

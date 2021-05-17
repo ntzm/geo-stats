@@ -7,7 +7,7 @@ permalink: /countries/kh-th
 * TOC
 {:toc}
 
-## Driving Side
+## Driving side
 
 Thailand drives on the left, whereas Cambodia drives on the right.
 
