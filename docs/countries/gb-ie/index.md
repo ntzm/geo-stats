@@ -63,11 +63,15 @@ Ireland uses metric (km, km/h, m).
 
 ![](ie-speed.png)
 
+_Copyright Google_
+
 ## House style
 
 Houses in rural Ireland are boxy, and often surrounded by a stone wall.
 
 ![](ie-house.png)
+
+_Copyright Google_
 
 ---
 
