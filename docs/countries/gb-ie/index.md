@@ -43,11 +43,23 @@ Signs in the UK will always contain English, but may also contain Welsh if you'r
 
 _Copyright Google_
 
+On sharp corners, you can see a "Sharp Deviation of Route" sign made up of black and white chevrons.
+
+![](gb-corner.png)
+
+_Copyright Google_
+
 ### Ireland
 
 Signs in Ireland will contain English and Gaelic in italics.
 
 ![](ie-sign.png)
+
+_Copyright Google_
+
+On sharp corners, you can see a "Sharp Deviation of Route" sign made up of black and yellow chevrons.
+
+![](ie-corner.png)
 
 _Copyright Google_
 
@@ -67,7 +79,7 @@ _Copyright Google_
 
 ## House style
 
-Houses in rural Ireland are boxy, and often surrounded by a stone wall.
+Houses in rural Ireland are boxy, and often surrounded by a short stone wall.
 
 ![](ie-house.png)
 
