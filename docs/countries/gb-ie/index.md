@@ -4,6 +4,9 @@ permalink: /countries/gb-ie
 
 # Differences between United Kingdom and Ireland
 
+* TOC
+{:toc}
+
 ## Licence plates
 
 In the UK, cars have white licence plates on the front of the car and yellow licence plates at the rear of the car.

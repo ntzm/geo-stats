@@ -4,6 +4,9 @@ permalink: /countries/kh-th
 
 # Differences between Cambodia and Thailand
 
+* TOC
+{:toc}
+
 ## Driving Side
 
 Thailand drives on the left, whereas Cambodia drives on the right.
